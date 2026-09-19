@@ -28,6 +28,7 @@ const selectItem = (i) => {
     $(this).toggleClass('active', $(this).index() === i);
   });
   $('#held-name').text(items[i].name);
+  if (window.MWScene) MWScene.setHeld(i);
 };
 
 const renderChart = (item) => {
@@ -62,7 +63,7 @@ const renderChart = (item) => {
 };
 
 const showBoard = (item) => {
-  $('#board-img').css('background', item.color);
+  $('#board-img').attr('src', 'img/' + item.id + '.png').attr('alt', item.name + '三维模型图');
   $('#board-name').text(item.name);
   $('#board-desc').text(item.desc);
   $('#board-index').text(items.indexOf(item) + 1);
@@ -115,6 +116,10 @@ const loadData = async () => {
     $('#hotbar-wrap').removeClass('d-none');
     renderHotbar();
     $('#held-name').text(items[0].name);
+    MWScene.init(items, (i) => {
+      selectItem(i);
+      showBoard(items[i]);
+    });
   } catch (error) {
     const msg = error instanceof SyntaxError ? '数据格式错误：JSON 无法解析' : error.message;
     setStatus('加载失败：' + msg, 'danger');
