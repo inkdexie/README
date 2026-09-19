@@ -48,6 +48,12 @@ window.MWScene = (() => {
   }
 
   const makers = { tnt: makeTnt, sword: makeSword, torch: makeTorch, apple: makeApple };
+  const grips = {
+    tnt: new THREE.Vector3(0, 0, 0),
+    sword: new THREE.Vector3(0, -0.28, 0),
+    torch: new THREE.Vector3(0, 0.15, 0),
+    apple: new THREE.Vector3(0, 0, 0)
+  };
 
   function makeSteve() {
     const steve = new THREE.Group();
@@ -109,12 +115,16 @@ window.MWScene = (() => {
     }
     const item = itemsData[index];
     if (!item) return;
+    const s = 0.55;
+    const wrap = new THREE.Group();
     const obj = makers[item.id]();
-    obj.scale.setScalar(0.55);
-    obj.position.set(0, -0.95, 0.25);
-    obj.rotation.z = -0.3;
-    heldItem = obj;
-    rightHand.add(obj);
+    obj.position.copy(grips[item.id]).multiplyScalar(-s);
+    obj.scale.setScalar(s);
+    wrap.add(obj);
+    wrap.position.set(0, -0.82, 0.45);
+    wrap.rotation.x = -0.25;
+    heldItem = wrap;
+    rightHand.add(wrap);
   }
 
   function init(data, pickCallback) {
@@ -129,7 +139,7 @@ window.MWScene = (() => {
     scene.fog = new THREE.Fog(0x87ceeb, 12, 28);
 
     camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
-    camera.position.set(5.5, 3.8, 7.5);
+    camera.position.set(6.5, 4.2, 9);
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(w, h);
@@ -140,31 +150,35 @@ window.MWScene = (() => {
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.target.set(0, 1.4, 0);
     controls.enableDamping = true;
-    controls.maxPolarAngle = Math.PI / 2.05;
+    controls.enablePan = true;
+    controls.screenSpacePanning = true;
+    controls.minDistance = 3;
+    controls.maxDistance = 20;
 
     scene.add(new THREE.AmbientLight(0xffffff, 0.55));
     const dir = new THREE.DirectionalLight(0xffffff, 0.9);
     dir.position.set(4, 8, 5);
     scene.add(dir);
 
-    const dirt = new THREE.Mesh(new THREE.BoxGeometry(10, 0.8, 10), mat(0x8b5a2b));
+    const dirt = new THREE.Mesh(new THREE.BoxGeometry(14, 0.8, 14), mat(0x8b5a2b));
     dirt.position.y = -0.4;
-    const grass = new THREE.Mesh(new THREE.BoxGeometry(10, 0.25, 10), mat(0x5d9c3c));
+    const grass = new THREE.Mesh(new THREE.BoxGeometry(14, 0.25, 14), mat(0x5d9c3c));
     grass.position.y = 0.125;
     scene.add(dirt, grass);
 
     const steve = makeSteve();
-    steve.position.set(-1.6, 0, 0.3);
+    steve.position.set(-3.2, 0, 0);
+    steve.rotation.y = Math.PI / 2;
     scene.add(steve);
 
     itemsGroup = new THREE.Group();
-    itemsGroup.position.set(1.4, 0, 0);
+    itemsGroup.position.set(2, 0, 0);
     scene.add(itemsGroup);
 
     data.forEach((item, i) => {
       const angle = (i / data.length) * Math.PI * 2 + Math.PI / 4;
       const obj = makers[item.id]();
-      obj.position.set(Math.cos(angle) * 1.9, 0.7, Math.sin(angle) * 1.9);
+      obj.position.set(Math.cos(angle) * 1.7, 0.7, Math.sin(angle) * 1.7);
       obj.lookAt(itemsGroup.position.x, obj.position.y, itemsGroup.position.z);
       obj.userData.index = i;
       if (item.id === 'torch') flameMesh = obj.getObjectByName('flame');
