@@ -1,31 +1,12 @@
-const items = [
-  {
-    id: 'tnt',
-    name: 'TNT',
-    color: '#c0392b',
-    desc: '一种红色爆炸方块，用火源或红石信号点燃后会延时爆炸，可用于采矿或清理大片方块。靠近未爆炸的 TNT 有危险，注意保持距离。'
-  },
-  {
-    id: 'sword',
-    name: '钻石剑',
-    color: '#4aedd9',
-    desc: '用钻石合成的近战武器，攻击力高且耐用，是生存前期到后期都十分可靠的装备。手持时还能格挡部分伤害。'
-  },
-  {
-    id: 'torch',
-    name: '火把',
-    color: '#ffb52e',
-    desc: '用木棍和煤炭合成的照明物品，插在墙面或地面上发出光亮，能防止黑暗处生成怪物，是矿洞探索的必备品。'
-  },
-  {
-    id: 'apple',
-    name: '金苹果',
-    color: '#f2c14e',
-    desc: '用金锭包裹苹果合成的珍贵食物，食用后恢复饥饿值并获得生命恢复等增益效果，材料稀有，建议关键时刻再用。'
-  }
-];
-
+let items = [];
+let dataSource = '';
 let current = 0;
+let statChart = null;
+
+const setStatus = (text, type) => {
+  $('#load-status').text(text)
+    .attr('class', 'alert alert-' + type + ' mb-3 text-center');
+};
 
 const renderHotbar = () => {
   $('#hotbar').empty();
@@ -49,15 +30,50 @@ const selectItem = (i) => {
   $('#held-name').text(items[i].name);
 };
 
+const renderChart = (item) => {
+  const labels = Object.keys(item.stats);
+  const values = Object.values(item.stats);
+  if (statChart !== null) {
+    statChart.destroy();
+  }
+  statChart = new Chart(document.querySelector('#stat-chart'), {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: '属性评分（分）',
+        data: values,
+        backgroundColor: item.color,
+        borderColor: 'rgba(0,0,0,.4)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: { display: true, text: item.name + ' 属性对比（单位：分，满分10）' }
+      },
+      scales: {
+        y: { beginAtZero: true, max: 10, title: { display: true, text: '评分（分）' } }
+      }
+    }
+  });
+};
+
 const showBoard = (item) => {
   $('#board-img').css('background', item.color);
   $('#board-name').text(item.name);
   $('#board-desc').text(item.desc);
   $('#board-index').text(items.indexOf(item) + 1);
+  $('#board-source').text('数据来源：' + dataSource);
   $('#itemModal').modal('show');
+  renderChart(item);
 };
 
 $(document).on('keydown', (e) => {
+  if (items.length === 0) return;
+  if ($('#itemModal').hasClass('show')) return;
   const n = parseInt(e.key, 10);
   if (n >= 1 && n <= items.length) {
     selectItem(n - 1);
@@ -77,5 +93,32 @@ $('#hotbar').on('keydown', '.mw-slot', function (e) {
   }
 });
 
-renderHotbar();
-$('#held-name').text(items[0].name);
+const loadData = async () => {
+  setStatus('加载中...', 'warning');
+  try {
+    const response = await fetch('data/items.json?t=' + Date.now());
+    if (!response.ok) {
+      throw new Error('HTTP ' + response.status);
+    }
+    const data = await response.json();
+    if (!Array.isArray(data.items)) {
+      setStatus('数据格式错误：items 字段不是数组', 'danger');
+      return;
+    }
+    if (data.items.length === 0) {
+      setStatus('暂无物品数据', 'warning');
+      return;
+    }
+    items = data.items;
+    dataSource = data.source || '未注明';
+    $('#load-status').addClass('d-none');
+    $('#hotbar-wrap').removeClass('d-none');
+    renderHotbar();
+    $('#held-name').text(items[0].name);
+  } catch (error) {
+    const msg = error instanceof SyntaxError ? '数据格式错误：JSON 无法解析' : error.message;
+    setStatus('加载失败：' + msg, 'danger');
+  }
+};
+
+loadData();

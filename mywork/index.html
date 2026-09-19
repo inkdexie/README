@@ -39,8 +39,12 @@
       </div>
     </section>
 
-    <div class="mw-hotbar" id="hotbar" role="group" aria-label="物品栏"></div>
-    <p class="mw-tip">按数字键 1-4 切换手中物品 · 点击物品栏查看看板</p>
+    <div id="load-status" class="alert alert-warning mb-3 text-center">加载中...</div>
+
+    <div id="hotbar-wrap" class="d-none">
+      <div class="mw-hotbar" id="hotbar" role="group" aria-label="物品栏"></div>
+      <p class="mw-tip">按数字键 1-4 切换手中物品 · 点击物品栏查看看板</p>
+    </div>
 
     <section class="mw-section" id="board-section" aria-label="物品看板区域">
       <h2 class="mb-3">物品看板</h2>
@@ -60,18 +64,21 @@
             <div id="board-img" class="mw-board-img" role="img" aria-label="物品方块图标"></div>
             <p class="text-muted small mt-2 mb-0">物品序号 <span id="board-index"></span> / 4 · 图标为自制方块占位，后续替换为模型截图</p>
           </div>
-          <p id="board-desc" class="mb-0"></p>
+          <p id="board-desc"></p>
+          <div class="mw-chart-box"><canvas id="stat-chart" role="img" aria-label="物品属性对比柱状图"></canvas></div>
+          <p class="text-muted small mt-2 mb-0" id="board-source"></p>
         </div>
       </div>
     </div>
   </div>
 
   <footer>
-    <p>方块世界 · 我的世界风格原创模型作业（非官方、非素材搬运）</p>
+    <p>方块世界 · 我的世界风格原创模型作业</p>
   </footer>
 
   <script src="libs/jquery-3.7.1.min.js"></script>
   <script src="libs/bootstrap.bundle.min.js"></script>
+  <script src="libs/chart.umd.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
