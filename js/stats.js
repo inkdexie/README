@@ -36,12 +36,16 @@ const renderChart = (data) => {
 const loadData = async () => {
   setStatus('加载中...', 'warning');
   try {
-    const response = await fetch('data/data.json');
+    const response = await fetch('data/data.json?t=' + Date.now());
     if (!response.ok) {
       throw new Error('HTTP ' + response.status);
     }
     const data = await response.json();
-    if (!data.rooms || data.rooms.length === 0) {
+    if (!Array.isArray(data.rooms)) {
+      setStatus('数据格式错误：rooms 字段不是数组', 'danger');
+      return;
+    }
+    if (data.rooms.length === 0) {
       setStatus('暂无数据', 'warning');
       return;
     }
@@ -52,7 +56,8 @@ const loadData = async () => {
     $('#status').addClass('d-none');
   } catch (error) {
     $('#chart-section').addClass('d-none');
-    setStatus('加载失败：' + error.message, 'danger');
+    const msg = error instanceof SyntaxError ? '数据格式错误：JSON 无法解析' : error.message;
+    setStatus('加载失败：' + msg, 'danger');
   }
 };
 
