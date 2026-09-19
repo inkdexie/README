@@ -65,3 +65,19 @@ footer {
   font-size: 13px;
   padding: 32px 0;
 }
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.filter-label {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.chart-box {
+  height: 400px;
+}

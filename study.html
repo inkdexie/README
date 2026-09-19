@@ -27,11 +27,27 @@
 
   <main class="container my-5">
     <h2 class="mb-4">自习室</h2>
-    <div class="placeholder-box">
-      <span class="module-tag">自习室模块</span>
-      <p class="mb-1">此处将展示自习室列表、楼栋筛选与空余座位数。</p>
-      <p class="mb-0">内容待建设。</p>
+
+    <div class="filter-bar">
+      <span class="filter-label">楼层</span>
+      <div class="btn-group btn-group-sm" id="floor-filters" role="group">
+        <button type="button" class="btn btn-primary" data-floor="全部">全部</button>
+        <button type="button" class="btn btn-outline-primary" data-floor="1楼">1楼</button>
+        <button type="button" class="btn btn-outline-primary" data-floor="2楼">2楼</button>
+        <button type="button" class="btn btn-outline-primary" data-floor="3楼">3楼</button>
+      </div>
     </div>
+
+    <div class="filter-bar">
+      <span class="filter-label">状态</span>
+      <div class="btn-group btn-group-sm" id="open-filters" role="group">
+        <button type="button" class="btn btn-primary" data-open="全部">全部</button>
+        <button type="button" class="btn btn-outline-primary" data-open="open">开放中</button>
+        <button type="button" class="btn btn-outline-primary" data-open="closed">已关闭</button>
+      </div>
+    </div>
+
+    <ul class="list-group" id="room-list"></ul>
   </main>
 
   <footer>
@@ -39,5 +55,6 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/study.js"></script>
 </body>
 </html>

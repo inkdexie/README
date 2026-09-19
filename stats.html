@@ -27,17 +27,24 @@
 
   <main class="container my-5">
     <h2 class="mb-4">统计</h2>
-    <div class="placeholder-box">
-      <span class="module-tag">统计模块</span>
-      <p class="mb-1">此处将展示座位使用率、时段热度等图表。</p>
-      <p class="mb-0">内容待建设。</p>
-    </div>
+    <p id="status" class="alert alert-warning">加载中...</p>
+
+    <section id="chart-section" class="card d-none">
+      <div class="card-body">
+        <h3 class="h5" id="chart-title"></h3>
+        <div class="chart-box"><canvas id="usage-chart"></canvas></div>
+        <p class="text-muted small mt-3 mb-0" id="data-source"></p>
+      </div>
+    </section>
   </main>
 
   <footer>
     <p>校园助手 · 整合骨架演示</p>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="libs/jquery-3.7.1.min.js"></script>
+  <script src="libs/bootstrap.bundle.min.js"></script>
+  <script src="libs/chart.umd.js"></script>
+  <script src="js/stats.js"></script>
 </body>
 </html>
