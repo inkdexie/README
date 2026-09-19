@@ -50,8 +50,8 @@ window.MWScene = (() => {
   const makers = { tnt: makeTnt, sword: makeSword, torch: makeTorch, apple: makeApple };
   const grips = {
     tnt: new THREE.Vector3(0, 0, 0),
-    sword: new THREE.Vector3(0, -0.28, 0),
-    torch: new THREE.Vector3(0, 0.15, 0),
+    sword: new THREE.Vector3(0, -0.05, 0),
+    torch: new THREE.Vector3(0, 0.1, 0),
     apple: new THREE.Vector3(0, 0, 0)
   };
 
@@ -67,10 +67,11 @@ window.MWScene = (() => {
     body.position.set(0, 1.8, 0);
 
     const armL = new THREE.Mesh(new THREE.BoxGeometry(0.28, 1.1, 0.4), mat(0x00afaf));
-    armL.position.set(-0.56, 1.85, 0);
+    armL.position.set(0.56, 1.85, 0);
 
     rightHand = new THREE.Group();
-    rightHand.position.set(0.56, 2.2, 0);
+    rightHand.position.set(-0.56, 2.2, 0);
+    rightHand.rotation.x = -Math.PI / 2;
     const armR = new THREE.Mesh(new THREE.BoxGeometry(0.28, 1.1, 0.4), mat(0x00afaf));
     armR.position.y = -0.35;
     rightHand.add(armR);
@@ -121,8 +122,8 @@ window.MWScene = (() => {
     obj.position.copy(grips[item.id]).multiplyScalar(-s);
     obj.scale.setScalar(s);
     wrap.add(obj);
-    wrap.position.set(0, -0.82, 0.45);
-    wrap.rotation.x = -0.25;
+    wrap.position.set(0, -0.95, 0.08);
+    wrap.rotation.x = Math.PI / 2;
     heldItem = wrap;
     rightHand.add(wrap);
   }
@@ -139,7 +140,7 @@ window.MWScene = (() => {
     scene.fog = new THREE.Fog(0x87ceeb, 12, 28);
 
     camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
-    camera.position.set(6.5, 4.2, 9);
+    camera.position.set(0.4, 3.6, 10.2);
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(w, h);
@@ -148,7 +149,7 @@ window.MWScene = (() => {
     container.appendChild(renderer.domElement);
 
     controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.target.set(0, 1.4, 0);
+    controls.target.set(-0.6, 1.6, 0);
     controls.enableDamping = true;
     controls.enablePan = true;
     controls.screenSpacePanning = true;

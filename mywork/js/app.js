@@ -15,7 +15,9 @@ const renderHotbar = () => {
       .attr('data-id', item.id)
       .attr('aria-label', '物品 ' + (i + 1) + '：' + item.name)
       .toggleClass('active', i === current);
-    slot.append($('<span class="mw-icon"></span>').css('background', item.color));
+    slot.append($('<img class="mw-icon" alt="">')
+      .attr('src', 'img/' + item.id + '.png')
+      .attr('aria-hidden', 'true'));
     slot.append($('<span class="mw-slot-name"></span>').text((i + 1) + ' ' + item.name));
     $('#hotbar').append(slot);
   });
